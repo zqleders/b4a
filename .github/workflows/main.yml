@@ -37,8 +37,7 @@ jobs:
           B4A_PASSWORD: ${{ secrets.B4A_PASSWORD }}
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-          # 网址通过环境变量传入
-          B4A_LOGIN_URL: "https://www.back4app.com/login"
-          B4A_CONTAINER_URL: "https://containers.back4app.com/apps/beed9bb1-d251-4586-a4b2-3ae42852717a"
+          B4A_LOGIN_URL: ${{ secrets.B4A_LOGIN_URL }}
+          B4A_CONTAINER_URL: ${{ secrets.B4A_CONTAINER_URL }}
         run: |
           python deploy.py
