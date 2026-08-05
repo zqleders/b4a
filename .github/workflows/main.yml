@@ -1,0 +1,44 @@
+name: Auto Deploy to B4A
+
+on:
+#  schedule:
+#    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright requests
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: 启用 WARP 网络
+        uses: fscarmen/warp-on-actions@v1.3
+        with:
+          stack: dual
+          mode: client
+
+      - name: 执行自动化部署脚本
+        env:
+          B4A_EMAIL: ${{ secrets.B4A_EMAIL }}
+          B4A_PASSWORD: ${{ secrets.B4A_PASSWORD }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          # 网址通过环境变量传入
+          B4A_LOGIN_URL: "https://www.back4app.com/login"
+          B4A_CONTAINER_URL: "https://containers.back4app.com/apps/beed9bb1-d251-4586-a4b2-3ae42852717a"
+        run: |
+          python deploy.py
