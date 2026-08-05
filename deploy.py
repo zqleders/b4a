@@ -1,4 +1,5 @@
 import os
+import re
 import time
 from playwright.sync_api import sync_playwright
 import requests
@@ -121,12 +122,10 @@ def run_automation():
             # 第 5 步：点击 Action 呼出菜单，再点击部署链接
             # -----------------------------------------------------------------
             print("正在查找并点击 Action 呼出按钮...")
-            # 通过按钮文字 "Action" 及特征类名定位呼出按钮
             action_btn = page.locator('button').filter(has_text="Action").filter(has=page.locator('svg'))
             action_btn.wait_for(state="visible", timeout=15000)
             action_btn.click()
             
-            # 等待菜单展开
             time.sleep(2)
             
             print("正在查找并点击 Deploy the latest commit...")
@@ -139,8 +138,32 @@ def run_automation():
             path5 = f"step_{screenshot_counter}_deployed.png"
             page.screenshot(path=path5)
             send_telegram_photo(path5, "步骤 5: 已成功点开 Action 菜单并触发 Deploy the latest commit！")
+            screenshot_counter += 1
+
+            # -----------------------------------------------------------------
+            # 第 6 步：提取项目网址并保存到 url.txt
+            # -----------------------------------------------------------------
+            print("正在提取项目访问网址...")
+            page_content = page.content()
             
-            send_telegram_message("✅ B4A 容器项目定时自动部署流程执行完毕！")
+            # 使用正则表达式匹配特征：myapp4-[hash].b4a.run
+            # 适配形式，如 myapp4-h377lrfv.b4a.run
+            match = re.search(r'(myapp4-[a-zA-Z0-9]+\.b4a\.run)', page_content)
+            
+            if match:
+                extracted_url = match.group(1)
+                print(f"成功提取到网址: {extracted_url}")
+                
+                # 写入到项目根目录下的 url.txt（覆盖保存模式 'w'）
+                with open("url.txt", "w", encoding="utf-8") as f:
+                    f.write(extracted_url)
+                
+                send_telegram_message(f"🔗 成功提取最新部署网址并已保存至 url.txt:\n`{extracted_url}`")
+            else:
+                print("⚠️ 未能通过正则匹配到目标网址，请检查页面内容或元素特征。")
+                send_telegram_message("⚠️ 提示: 未能自动在页面中捕获到 myapp4-*.b4a.run 网址。")
+
+            send_telegram_message("✅ B4A 容器项目定时自动部署流程全部执行完毕！")
 
         except Exception as e:
             error_msg = f"❌ 自动化执行过程中发生异常: {str(e)}"
