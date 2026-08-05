@@ -8,11 +8,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
+    # 必须加上这一行，赋予 GitHub Actions 对仓库内容的写权限，才能成功推送 url.txt
+    permissions:
+      contents: write
 
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
-        token: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 设置 Python 环境
         uses: actions/setup-python@v5
