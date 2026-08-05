@@ -3,13 +3,12 @@ import time
 from playwright.sync_api import sync_playwright
 import requests
 
-# 从环境变量中获取敏感配置及访问地址（不写死默认值）
+# 从环境变量中获取敏感配置及访问地址
 EMAIL = os.environ.get("B4A_EMAIL")
 PASSWORD = os.environ.get("B4A_PASSWORD")
 TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN")
 TG_CHAT_ID = os.environ.get("TG_CHAT_ID")
 
-# 访问地址也全部从环境变量中读取
 LOGIN_URL = os.environ.get("B4A_LOGIN_URL")
 CONTAINER_URL = os.environ.get("B4A_CONTAINER_URL")
 
@@ -40,7 +39,6 @@ def send_telegram_photo(photo_path, caption):
         print(f"发送 Telegram 图片失败: {e}")
 
 def run_automation():
-    # 检查必要的环境变量是否存在
     if not LOGIN_URL or not CONTAINER_URL:
         raise ValueError("环境变量 B4A_LOGIN_URL 或 B4A_CONTAINER_URL 未设置！")
 
@@ -92,10 +90,10 @@ def run_automation():
             screenshot_counter += 1
 
             # -----------------------------------------------------------------
-            # 第 3 步：点击登录按钮
+            # 第 3 步：点击登录按钮（已修复：通过精准类名过滤排除第三方登录按钮）
             # -----------------------------------------------------------------
             print("正在点击登录按钮...")
-            login_btn = page.locator('button').filter(has=page.locator('span:text("Continue")'))
+            login_btn = page.locator('button.Button_primary__THcya').filter(has_text="Continue")
             login_btn.click()
             
             page.wait_for_load_state("networkidle", timeout=30000)
