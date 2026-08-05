@@ -90,7 +90,7 @@ def run_automation():
             screenshot_counter += 1
 
             # -----------------------------------------------------------------
-            # 第 3 步：点击登录按钮（已修复：通过精准类名过滤排除第三方登录按钮）
+            # 第 3 步：点击登录按钮
             # -----------------------------------------------------------------
             print("正在点击登录按钮...")
             login_btn = page.locator('button.Button_primary__THcya').filter(has_text="Continue")
@@ -118,19 +118,27 @@ def run_automation():
             screenshot_counter += 1
 
             # -----------------------------------------------------------------
-            # 第 5 步：寻找部署链接并点击
+            # 第 5 步：点击 Action 呼出菜单，再点击部署链接
             # -----------------------------------------------------------------
+            print("正在查找并点击 Action 呼出按钮...")
+            # 通过按钮文字 "Action" 及特征类名定位呼出按钮
+            action_btn = page.locator('button').filter(has_text="Action").filter(has=page.locator('svg'))
+            action_btn.wait_for(state="visible", timeout=15000)
+            action_btn.click()
+            
+            # 等待菜单展开
+            time.sleep(2)
+            
             print("正在查找并点击 Deploy the latest commit...")
             deploy_item = page.locator('ul.py-1 li').filter(has_text="Deploy the latest commit")
-            
-            deploy_item.wait_for(state="visible", timeout=15000)
+            deploy_item.wait_for(state="visible", timeout=10000)
             deploy_item.click()
             
             time.sleep(5)
             
             path5 = f"step_{screenshot_counter}_deployed.png"
             page.screenshot(path=path5)
-            send_telegram_photo(path5, "步骤 5: 已成功点击 Deploy the latest commit 触发部署！")
+            send_telegram_photo(path5, "步骤 5: 已成功点开 Action 菜单并触发 Deploy the latest commit！")
             
             send_telegram_message("✅ B4A 容器项目定时自动部署流程执行完毕！")
 
