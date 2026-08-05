@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
+        token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 设置 Python 环境
         uses: actions/setup-python@v5
@@ -39,6 +40,7 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
           B4A_LOGIN_URL: ${{ secrets.B4A_LOGIN_URL }}
           B4A_CONTAINER_URL: ${{ secrets.B4A_CONTAINER_URL }}
+          
         run: |
           python deploy.py
 
