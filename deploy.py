@@ -66,7 +66,7 @@ def run_automation():
             # -----------------------------------------------------------------
             # 第 1 步：访问登录页并输入邮箱
             # -----------------------------------------------------------------
-            send_telegram_message("🚀 开始执行 B4A 自动部署任务...")
+            send_telegram_message("🚀 开始执行任务...")
             print(f"正在访问登录页: {LOGIN_URL}")
             page.goto(LOGIN_URL, timeout=60000)
             page.wait_for_load_state("networkidle")
@@ -102,7 +102,7 @@ def run_automation():
             
             path3 = f"step_{screenshot_counter}_login.png"
             page.screenshot(path=path3, full_page=True)
-            send_telegram_photo(path3, "步骤 3: 登录动作执行完毕（请检查是否有CF验证阻拦）")
+            send_telegram_photo(path3, "步骤 3: 登录动作执行完毕")
             screenshot_counter += 1
 
             # -----------------------------------------------------------------
@@ -115,11 +115,11 @@ def run_automation():
             
             path4 = f"step_{screenshot_counter}_containers.png"
             page.screenshot(path=path4)
-            send_telegram_photo(path4, "步骤 4: 成功进入容器面板页")
+            send_telegram_photo(path4, "步骤 4: 成功进入面板页")
             screenshot_counter += 1
 
             # -----------------------------------------------------------------
-            # 第 5 步：点击 Action 呼出菜单，再点击部署链接
+            # 第 5 步：点击 Action 呼出菜单，再点击链接
             # -----------------------------------------------------------------
             print("正在查找并点击 Action 呼出按钮...")
             action_btn = page.locator('button').filter(has_text="Action").filter(has=page.locator('svg'))
@@ -146,8 +146,6 @@ def run_automation():
             print("正在提取项目访问网址...")
             page_content = page.content()
             
-            # 使用正则表达式匹配特征：myapp4-[hash].b4a.run
-            # 适配形式，如 myapp4-h377lrfv.b4a.run
             match = re.search(r'(myapp4-[a-zA-Z0-9]+\.b4a\.run)', page_content)
             
             if match:
@@ -158,12 +156,12 @@ def run_automation():
                 with open("url.txt", "w", encoding="utf-8") as f:
                     f.write(extracted_url)
                 
-                send_telegram_message(f"🔗 成功提取最新部署网址并已保存至 url.txt:\n`{extracted_url}`")
+                send_telegram_message(f"🔗 成功提取最新网址并已保存至 url.txt:\n`{extracted_url}`")
             else:
                 print("⚠️ 未能通过正则匹配到目标网址，请检查页面内容或元素特征。")
-                send_telegram_message("⚠️ 提示: 未能自动在页面中捕获到 myapp4-*.b4a.run 网址。")
+                send_telegram_message("⚠️ 提示: 未能自动在页面中捕获到相应网址。")
 
-            send_telegram_message("✅ B4A 容器项目定时自动部署流程全部执行完毕！")
+            send_telegram_message("✅ B4A 容器项目流程全部执行完毕！")
 
         except Exception as e:
             error_msg = f"❌ 自动化执行过程中发生异常: {str(e)}"
