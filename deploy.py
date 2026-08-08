@@ -66,7 +66,7 @@ def run_automation():
             # -----------------------------------------------------------------
             # 第 1 步：访问登录页并输入邮箱
             # -----------------------------------------------------------------
-            send_telegram_message("🚀 开始执行任务...")
+            send_telegram_message("🚀 B4A 开始执行任务...")
             print(f"正在访问登录页: {LOGIN_URL}")
             page.goto(LOGIN_URL, timeout=60000)
             page.wait_for_load_state("networkidle")
@@ -76,7 +76,7 @@ def run_automation():
             
             path1 = f"step_{screenshot_counter}_email.png"
             page.screenshot(path=path1)
-            send_telegram_photo(path1, "步骤 1: 成功输入邮箱")
+           # send_telegram_photo(path1, "步骤 1: 成功输入邮箱")
             screenshot_counter += 1
 
             # -----------------------------------------------------------------
@@ -87,7 +87,7 @@ def run_automation():
             
             path2 = f"step_{screenshot_counter}_password.png"
             page.screenshot(path=path2)
-            send_telegram_photo(path2, "步骤 2: 成功输入密码")
+           # send_telegram_photo(path2, "步骤 2: 成功输入密码")
             screenshot_counter += 1
 
             # -----------------------------------------------------------------
@@ -102,7 +102,7 @@ def run_automation():
             
             path3 = f"step_{screenshot_counter}_login.png"
             page.screenshot(path=path3, full_page=True)
-            send_telegram_photo(path3, "步骤 3: 登录动作执行完毕")
+           # send_telegram_photo(path3, "步骤 3: 登录动作执行完毕")
             screenshot_counter += 1
 
             # -----------------------------------------------------------------
@@ -115,7 +115,7 @@ def run_automation():
             
             path4 = f"step_{screenshot_counter}_containers.png"
             page.screenshot(path=path4)
-            send_telegram_photo(path4, "步骤 4: 成功进入面板页")
+           # send_telegram_photo(path4, "步骤 4: 成功进入面板页")
             screenshot_counter += 1
 
             # -----------------------------------------------------------------
@@ -156,15 +156,15 @@ def run_automation():
                 with open("url.txt", "w", encoding="utf-8") as f:
                     f.write(extracted_url)
                 
-                send_telegram_message(f"🔗 成功提取最新网址并已保存至 url.txt:\n`{extracted_url}`")
+                send_telegram_message(f"🔗 B4A 成功提取最新网址并已保存至 url.txt:\n`{extracted_url}`")
             else:
                 print("⚠️ 未能通过正则匹配到目标网址，请检查页面内容或元素特征。")
-                send_telegram_message("⚠️ 提示: 未能自动在页面中捕获到相应网址。")
+                send_telegram_message("⚠️ B4A 提示: 未能自动在页面中捕获到相应网址。")
 
             send_telegram_message("✅ B4A 容器项目流程全部执行完毕！")
 
         except Exception as e:
-            error_msg = f"❌ 自动化执行过程中发生异常: {str(e)}"
+            error_msg = f"❌ B4A 自动化执行过程中发生异常: {str(e)}"
             print(error_msg)
             error_path = "error_snapshot.png"
             page.screenshot(path=error_path, full_page=True)
