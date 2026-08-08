@@ -137,7 +137,7 @@ def run_automation():
             
             path5 = f"step_{screenshot_counter}_deployed.png"
             page.screenshot(path=path5)
-            send_telegram_photo(path5, "步骤 5: 已成功点开 Action 菜单并触发 Deploy the latest commit！")
+           # send_telegram_photo(path5, "步骤 5: 已成功点开 Action 菜单并触发 Deploy the latest commit！")
             screenshot_counter += 1
 
             # -----------------------------------------------------------------
@@ -161,7 +161,7 @@ def run_automation():
                 print("⚠️ 未能通过正则匹配到目标网址，请检查页面内容或元素特征。")
                 send_telegram_message("⚠️ B4A 提示: 未能自动在页面中捕获到相应网址。")
 
-            send_telegram_message("✅ B4A 容器项目流程全部执行完毕！")
+                send_telegram_message("✅ B4A 容器项目流程全部执行完毕！")
 
         except Exception as e:
             error_msg = f"❌ B4A 自动化执行过程中发生异常: {str(e)}"
